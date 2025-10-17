@@ -1,0 +1,405 @@
+# Django Multi-Tenant E-Commerce Platform - .gitignore
+
+# ============================================================================
+# Python
+# ============================================================================
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ============================================================================
+# Django
+# ============================================================================
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Django media and static files
+/media/
+/staticfiles/
+/static/
+!/static/.gitkeep
+
+# Django migrations (optional - uncomment if you want to ignore migrations)
+# */migrations/*.py
+# */migrations/*.pyc
+# !*/migrations/__init__.py
+
+# ============================================================================
+# Environment Variables
+# ============================================================================
+.env
+.env.local
+.env.*.local
+.envrc
+*.env
+
+# ============================================================================
+# Virtual Environment
+# ============================================================================
+venv/
+ENV/
+env/
+.venv/
+pip-selfcheck.json
+
+# ============================================================================
+# IDEs and Editors
+# ============================================================================
+
+# VSCode
+.vscode/
+*.code-workspace
+.history/
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# Atom
+.atom/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ============================================================================
+# Operating System Files
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ============================================================================
+# Testing
+# ============================================================================
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+htmlcov/
+.testmondata
+
+# ============================================================================
+# Database
+# ============================================================================
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+db.json
+
+# PostgreSQL
+*.pgsql
+*.backup
+
+# ============================================================================
+# Celery
+# ============================================================================
+celerybeat-schedule
+celerybeat.pid
+celerybeat-schedule.*
+
+# ============================================================================
+# Redis
+# ============================================================================
+dump.rdb
+
+# ============================================================================
+# Logs
+# ============================================================================
+logs/
+*.log
+*.log.*
+log/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ============================================================================
+# Documentation
+# ============================================================================
+docs/_build/
+docs/.build/
+site/
+
+# Sphinx documentation
+docs/_build/
+
+# ============================================================================
+# Backup Files
+# ============================================================================
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+*~
+
+# ============================================================================
+# Certificates and Keys
+# ============================================================================
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+
+# ============================================================================
+# Docker
+# ============================================================================
+docker-compose.override.yml
+.dockerignore
+
+# ============================================================================
+# Node.js (if using any frontend tools)
+# ============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ============================================================================
+# Frontend Build
+# ============================================================================
+frontend/build/
+frontend/dist/
+frontend/node_modules/
+
+# ============================================================================
+# Jupyter Notebook
+# ============================================================================
+.ipynb_checkpoints
+*.ipynb
+
+# ============================================================================
+# pyenv
+# ============================================================================
+.python-version
+
+# ============================================================================
+# pipenv
+# ============================================================================
+Pipfile.lock
+
+# ============================================================================
+# Poetry
+# ============================================================================
+poetry.lock
+
+# ============================================================================
+# Translations
+# ============================================================================
+*.mo
+*.pot
+
+# ============================================================================
+# Scrapy
+# ============================================================================
+.scrapy
+
+# ============================================================================
+# mkdocs documentation
+# ============================================================================
+/site
+
+# ============================================================================
+# mypy
+# ============================================================================
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ============================================================================
+# Pyre type checker
+# ============================================================================
+.pyre/
+
+# ============================================================================
+# pytype static type analyzer
+# ============================================================================
+.pytype/
+
+# ============================================================================
+# Cython debug symbols
+# ============================================================================
+cython_debug/
+
+# ============================================================================
+# Project Specific
+# ============================================================================
+
+# Tenant-specific media files (optional - depends on your storage strategy)
+# media/tenants/
+
+# Uploaded files
+uploads/
+user_uploads/
+
+# Temporary files
+tmp/
+temp/
+
+# Cache directories
+.cache/
+*.cache
+
+# Session files
+sessions/
+
+# Payment gateway test files
+payment_test_data/
+
+# AI/ML Model files (if storing models locally)
+*.pkl
+*.h5
+*.model
+*.joblib
+
+# Large data files
+*.csv
+*.json.gz
+*.parquet
+
+# Local development files
+local/
+.local/
+
+# Sentry
+.sentryclirc
+
+# Professional and security
+secrets/
+credentials/
+config/local_settings.py
+
+# Temporary documentation files
+TEMP_*.md
+TODO.md
+NOTES.md
+
+# OS-specific
+.Spotlight-V100
+.Trashes
+
+# Archive files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
