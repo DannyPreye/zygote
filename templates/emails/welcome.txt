@@ -1,0 +1,17 @@
+Hi {{ customer_name }},
+
+Welcome to our store! We're thrilled to have you join our community.
+
+Here's what you can do now:
+- Browse our extensive product catalog
+- Add items to your wishlist
+- Track your orders
+- Manage your account settings
+
+Start shopping: {{ site_url }}
+
+If you have any questions or need help getting started, don't hesitate to reach out to our support team.
+
+Welcome aboard!
+The Team
+

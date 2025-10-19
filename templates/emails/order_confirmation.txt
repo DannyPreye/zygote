@@ -1,0 +1,39 @@
+Hi {{ customer_name }},
+
+Thank you for your order! We've received your order and will start processing it soon.
+
+ORDER DETAILS
+-------------
+Order Number: {{ order.order_number }}
+Order Date: {{ order.created_at|date:"F d, Y" }}
+Status: {{ order.get_status_display }}
+
+ORDER ITEMS
+-----------
+{% for item in items %}
+{{ item.product.name }} (Qty: {{ item.quantity }}) - ${{ item.price|floatformat:2 }} = ${{ item.total_price|floatformat:2 }}
+{% endfor %}
+
+SUMMARY
+-------
+Subtotal: ${{ order.subtotal|floatformat:2 }}
+Shipping: ${{ order.shipping_amount|floatformat:2 }}
+Tax: ${{ order.tax_amount|floatformat:2 }}
+{% if order.discount_amount %}Discount: -${{ order.discount_amount|floatformat:2 }}{% endif %}
+TOTAL: ${{ order.total_amount|floatformat:2 }}
+
+{% if order.shipping_address %}
+SHIPPING ADDRESS
+----------------
+{{ order.shipping_address.street_address }}
+{% if order.shipping_address.apartment %}{{ order.shipping_address.apartment }}{% endif %}
+{{ order.shipping_address.city }}, {{ order.shipping_address.state }} {{ order.shipping_address.postal_code }}
+{{ order.shipping_address.country }}
+{% endif %}
+
+Track your order: {{ order_url }}
+
+You will receive another email once your order ships.
+
+Thanks for your purchase!
+

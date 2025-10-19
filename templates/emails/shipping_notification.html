@@ -1,0 +1,33 @@
+{% extends "emails/base.html" %} {% block title %}Your Order Has Shipped!{%
+endblock %} {% block header %}Order Shipped{% endblock %} {% block content %}
+<p>Hi {{ customer_name }},</p>
+
+<p>
+    Great news! Your order <strong>#{{ order.order_number }}</strong> has
+    shipped and is on its way to you.
+</p>
+
+{% if tracking_number %}
+<div
+    style="
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+    "
+>
+    <p style="margin: 0"><strong>Tracking Number:</strong></p>
+    <p style="font-size: 18px; margin: 10px 0">
+        <code>{{ tracking_number }}</code>
+    </p>
+</div>
+{% endif %}
+
+<div class="text-center mt-20">
+    <a href="{{ order_url }}" class="button">Track Your Order</a>
+</div>
+
+<p style="margin-top: 30px; font-size: 14px; color: #666">
+    Please allow 24-48 hours for tracking information to become available.
+</p>
+{% endblock %}

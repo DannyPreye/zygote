@@ -1,0 +1,23 @@
+{% extends "emails/base.html" %} {% block title %}Welcome to Our Store!{%
+endblock %} {% block header %}Welcome!{% endblock %} {% block content %}
+<p>Hi {{ customer_name }},</p>
+
+<p>Welcome to our store! We're thrilled to have you join our community.</p>
+
+<p>Here's what you can do now:</p>
+<ul>
+    <li>Browse our extensive product catalog</li>
+    <li>Add items to your wishlist</li>
+    <li>Track your orders</li>
+    <li>Manage your account settings</li>
+</ul>
+
+<div class="text-center mt-20">
+    <a href="{{ site_url }}" class="button">Start Shopping</a>
+</div>
+
+<p style="margin-top: 30px">
+    If you have any questions or need help getting started, don't hesitate to
+    reach out to our support team.
+</p>
+{% endblock %}

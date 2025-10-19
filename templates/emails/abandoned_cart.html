@@ -1,0 +1,44 @@
+{% extends "emails/base.html" %} {% block title %}You left items in your cart{%
+endblock %} {% block header %}Don't Forget Your Cart!{% endblock %} {% block
+content %}
+<p>Hi {{ customer_name }},</p>
+
+<p>
+    We noticed you left some great items in your cart. Don't miss out on these
+    products!
+</p>
+
+<h3 style="margin-top: 30px">Your Cart Items:</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th class="text-center">Quantity</th>
+            <th class="text-right">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td class="text-center">{{ item.quantity }}</td>
+            <td class="text-right">${{ item.subtotal|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="2" class="text-right">Total:</th>
+            <th class="text-right">${{ total|floatformat:2 }}</th>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="text-center mt-20">
+    <a href="{{ cart_url }}" class="button">Complete Your Purchase</a>
+</div>
+
+<p style="margin-top: 30px; font-size: 14px; color: #666">
+    This cart will be saved for the next 30 days.
+</p>
+{% endblock %}

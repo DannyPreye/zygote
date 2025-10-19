@@ -229,7 +229,12 @@ pip install -r requirements.txt
 ```
 
 ### 4. Environment Configuration
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (optional - all settings have defaults):
+
+> **Note**: The application uses `os.getenv()` for environment variables. You can either:
+> - Create a `.env` file and load it using `python-dotenv`
+> - Set environment variables directly in your system
+> - Use the default values (suitable for development)
 
 ```env
 # Django
@@ -288,12 +293,11 @@ CREATE DATABASE ecommerce_db;
 # Run migrations for shared apps
 python manage.py migrate_schemas --shared
 
-# Create public tenant
-python manage.py create_tenant
-
 # Run migrations for tenant apps
 python manage.py migrate_schemas
 ```
+
+**Note**: You'll need to create tenants using Django shell or create a custom management command. See the [Multi-Tenancy Setup](#-multi-tenancy-setup) section below for details.
 
 ### 6. Create Superuser
 ```bash
@@ -310,7 +314,50 @@ celery -A config worker -l info
 
 # Terminal 3: Celery beat (optional)
 celery -A config beat -l info
+
+# Terminal 4: Flower - Celery monitoring (optional)
+celery -A config flower
 ```
+
+Access the application:
+- **Main Application**: http://localhost:8000
+- **Admin Panel**: http://localhost:8000/admin/
+- **API Documentation**: http://localhost:8000/api/docs/
+- **Flower Monitoring**: http://localhost:5555 (if running)
+
+---
+
+## 📋 Implementation Status
+
+### ✅ Fully Implemented
+- Multi-tenant architecture with schema-based isolation
+- Complete product management (CRUD, categories, brands, reviews)
+- Inventory management (warehouses, stock movements, alerts, purchase orders)
+- Order management (full lifecycle, tracking, invoicing)
+- Payment processing (Stripe, Paystack, PayPal integration)
+- Promotions & coupon system (multiple discount types)
+- AI-powered recommendations (5 algorithms)
+- Customer management (accounts, addresses, groups)
+- Shopping cart & wishlist
+- Comprehensive authentication & security (JWT, 2FA, rate limiting)
+- API documentation (Swagger/OpenAPI)
+- Celery background task infrastructure
+- Redis caching for recommendations
+
+### 🚧 In Development
+- Email notification tasks (abandoned cart, order updates)
+- Email template system
+- Tenant creation management command
+- Docker containerization
+- Advanced analytics dashboard
+
+### 📝 Planned Features
+- GraphQL API support
+- Multi-language support (i18n)
+- Advanced reporting & exports
+- Marketplace features
+- Mobile app integration
+- Real-time notifications (WebSockets)
 
 ---
 
@@ -415,17 +462,7 @@ Once the server is running, access the interactive API documentation:
 
 ### Creating a New Tenant
 
-#### Method 1: Using Management Command
-```bash
-python manage.py create_tenant \
-    --schema_name=tenant1 \
-    --name="Tenant 1" \
-    --domain=tenant1.localhost \
-    --business_name="Tenant 1 Store" \
-    --business_email=admin@tenant1.com
-```
-
-#### Method 2: Using Django Shell
+#### Using Django Shell
 ```python
 from tenants.models import Tenant, Domain
 
@@ -603,11 +640,26 @@ POST /api/v1/recommendations/trending/
 - **Database indexing** - Composite indexes on frequently queried fields
 - **API pagination** - Efficient data handling
 
-### Background Tasks
-- **Celery workers** for async processing
-- **Email sending** - Asynchronous delivery
-- **Recommendation updates** - Periodic precomputation
-- **Report generation** - Background processing
+### Background Tasks (Celery)
+The platform uses Celery with Redis for asynchronous task processing:
+
+**Configured Task Queues:**
+- `recommendations` - ML-based recommendation updates
+- `orders` - Order processing and notifications
+- `cart` - Cart cleanup and abandoned cart recovery
+- `inventory` - Stock level updates and alerts
+- `promotions` - Promotion analytics and expiration
+- `customers` - Customer data processing
+
+**Implemented Tasks:**
+- Recommendation precomputation (every 1 hour)
+- Product similarity calculations
+- Trending products analysis
+- Personalized recommendations
+
+**Scheduled Tasks (Celery Beat):**
+- `update_product_recommendations` - Runs hourly to refresh cached recommendations
+- `clear_recommendation_cache` - Manual cache clearing task
 
 ---
 
@@ -681,48 +733,76 @@ coverage report
 - [ ] Configure Celery workers
 - [ ] Set up load balancer (if needed)
 
-### Docker Deployment (Optional)
+### Docker Deployment
 
-```yaml
-# docker-compose.yml example
-version: '3.8'
+> **Note**: Docker configuration is currently in development. A complete `docker-compose.yml` with all services will be available soon.
 
-services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: ecommerce_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+**Planned Docker Setup:**
+- PostgreSQL container for database
+- Redis container for caching and Celery broker
+- Django web application container
+- Celery worker containers (multiple queues)
+- Celery beat scheduler container
+- Flower monitoring container
+- Nginx reverse proxy (production)
 
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
+---
 
-  web:
-    build: .
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-      - redis
+## 🔧 Troubleshooting
 
-  celery:
-    build: .
-    command: celery -A config worker -l info
-    depends_on:
-      - db
-      - redis
+### Common Issues
 
-volumes:
-  postgres_data:
+#### 1. Migration Errors
+```bash
+# If you encounter migration conflicts, reset migrations for tenant schemas
+python manage.py migrate_schemas --shared
+python manage.py migrate_schemas
 ```
+
+#### 2. Redis Connection Error
+```bash
+# Make sure Redis is running
+redis-server
+
+# Test connection
+redis-cli ping
+# Should return: PONG
+```
+
+#### 3. Celery Not Processing Tasks
+```bash
+# Check Celery worker is running
+celery -A config worker -l info
+
+# Check if Redis broker is accessible
+celery -A config inspect active
+```
+
+#### 4. Import Errors for Payment Gateways
+```bash
+# Ensure all payment gateway packages are installed
+pip install stripe pypaystack2 paypalrestsdk
+```
+
+#### 5. Schema Does Not Exist Error
+This usually means you haven't created a tenant yet. Create one using Django shell:
+```python
+python manage.py shell
+>>> from tenants.models import Tenant, Domain
+>>> tenant = Tenant.objects.create(schema_name='public', name='Public')
+>>> Domain.objects.create(domain='localhost', tenant=tenant, is_primary=True)
+```
+
+#### 6. Static Files Not Loading
+```bash
+python manage.py collectstatic --noinput
+```
+
+### Getting Help
+- Check the `/docs` directory for detailed documentation
+- Review API documentation at `/api/docs/`
+- Open an issue on GitHub with detailed error logs
+- Include your Python version, Django version, and OS
 
 ---
 
@@ -772,17 +852,27 @@ For support, email support@yourdomain.com or open an issue on GitHub.
 
 ## 🗺️ Roadmap
 
-### Upcoming Features
-- [ ] GraphQL API support
-- [ ] Mobile app (React Native)
+### Current Sprint (In Progress)
+- [ ] Email notification system (abandoned cart, order updates)
+- [ ] Email template infrastructure
+- [ ] Tenant management command
+- [ ] Docker containerization
+- [ ] Unit tests for all apps
+
+### Next Sprint (Planned)
 - [ ] Advanced analytics dashboard
-- [ ] Multi-currency support enhancement
+- [ ] GraphQL API support
+- [ ] Multi-language support (i18n)
+- [ ] Advanced reporting & exports
 - [ ] Real-time notifications (WebSockets)
-- [ ] Advanced SEO tools
+
+### Future Releases
+- [ ] Mobile app (React Native)
 - [ ] Marketplace features
 - [ ] Dropshipping integration
-- [ ] Advanced reporting
-- [ ] Multi-language support
+- [ ] Advanced SEO tools
+- [ ] Multi-currency enhancement
+- [ ] AI chatbot integration
 
 ---
 

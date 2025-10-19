@@ -1,0 +1,21 @@
+Hi {{ customer_name }},
+
+We noticed you left some great items in your cart. Don't miss out on these products!
+
+Your Cart Items:
+{% for item in items %}
+- {{ item.product.name }} (Qty: {{ item.quantity }}) - ${{ item.subtotal|floatformat:2 }}
+{% endfor %}
+
+Total: ${{ total|floatformat:2 }}
+
+Complete your purchase now: {{ cart_url }}
+
+This cart will be saved for the next 30 days.
+
+Thanks,
+The Team
+
+---
+If you have any questions, please contact us at support@ourstore.com
+
